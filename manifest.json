@@ -1,0 +1,9 @@
+{
+  "name": "Boulangerie PWA",
+  "short_name": "Boulangerie",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0E3A5C",
+  "theme_color": "#00A86B",
+  "icons": []
+}

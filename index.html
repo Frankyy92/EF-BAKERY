@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Boulangerie</title>
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-xX2rY7+ueVMljpePGqlmZZ/97S+k7hv+l9lgnsfGWhjVuP4mfzEwoZwPqWZRBNImljqsNnhHJwraLNbM1jF6nA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Colour palette inspired by Otami */
+        :root {
+            --sidebar-bg: #0E3A5C;
+            --sidebar-accent: #1E5E8E;
+            --primary: #00A86B;
+            --warning: #F6B93B;
+            --text-light: #FFFFFF;
+            --text-dark: #2D3748;
+            --bg-light: #F5F6F8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+        /* Sidebar styles */
+        .sidebar {
+            width: 240px;
+            background: linear-gradient(180deg, var(--sidebar-bg), var(--sidebar-accent));
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 1rem;
+        }
+        .sidebar .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .sidebar .logo i {
+            font-size: 1.8rem;
+            color: var(--warning);
+        }
+        .nav-list { list-style: none; flex: 1; }
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 0.25rem;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.1); }
+        .nav-item.active { background: rgba(255,255,255,0.2); }
+        .nav-item i { width: 20px; text-align: center; }
+        .nav-item .label { flex: 1; font-weight: 500; }
+        /* Main area */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-light);
+        }
+        .main-header {
+            height: 60px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .main-header .title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .main-header .user {
+            color: var(--sidebar-bg);
+            font-weight: 500;
+        }
+        .main-content {
+            padding: 1.5rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        /* Production */
+        .search-bar {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+        }
+        .search-bar button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: var(--text-light);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .product-card input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+        .compute-container {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .compute-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .compute-btn:hover { background: #008f5a; }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        .result-table th, .result-table td {
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+        }
+        .result-table th {
+            background: #f9fafb;
+            text-align: left;
+        }
+        /* Timer cards */
+        .timers-section .add-timer-btn {
+            padding: 0.75rem 1rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .timers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .timer-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .timer-card .inputs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .timer-card input[type="number"] {
+            width: 70px;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+        .timer-display {
+            font-size: 1.8rem;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            padding: 0.5rem;
+            background: #000;
+            color: #00ff00;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .timer-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .timer-controls button {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .start-btn { background: var(--primary); }
+        .pause-btn { background: #e9892c; }
+        .reset-btn { background: #e53e3e; }
+        /* Chat styles */
+        .chat-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f7fafc;
+        }
+        .chat-input-group {
+            display: flex;
+            border-top: 1px solid #e2e8f0;
+            padding: 0.75rem;
+            background: #fff;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+        }
+        .send-btn {
+            margin-left: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .message {
+            background: #fff;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .message .user {
+            font-weight: 600;
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+        .message .time {
+            font-size: 0.75rem;
+            color: #718096;
+        }
+        /* Hidden by default */
+        .tab { display: none; }
+        .tab.active { display: block; }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; padding: 1rem 0.5rem; }
+            .sidebar .logo { justify-content: center; }
+            .sidebar .logo span { display: none; }
+            .nav-item .label { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar navigation -->
+    <nav class="sidebar">
+        <div class="logo"><i class="fa-solid fa-bread-slice"></i><span>Boulangerie</span></div>
+        <ul class="nav-list">
+            <li class="nav-item active" data-tab="production"><i class="fa-solid fa-calculator"></i><span class="label">Production</span></li>
+            <li class="nav-item" data-tab="timers"><i class="fa-solid fa-stopwatch"></i><span class="label">Minuteurs</span></li>
+            <li class="nav-item" data-tab="chat"><i class="fa-solid fa-comments"></i><span class="label">Chat</span></li>
+        </ul>
+    </nav>
+    <!-- Main content area -->
+    <div class="main">
+        <header class="main-header">
+            <div class="title" id="pageTitle">Production</div>
+            <div class="user" id="userNameDisplay"></div>
+        </header>
+        <div class="main-content">
+            <!-- Login screen -->
+            <div id="loginScreen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 60px);">
+                <div style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.05); max-width:360px; width:100%;">
+                    <h1 style="font-size:1.5rem; font-weight:700; color:var(--sidebar-bg); margin-bottom:1rem; text-align:center;">Connexion</h1>
+                    <p style="margin-bottom:1rem; text-align:center; color:#718096;">Entrez votre prénom pour commencer</p>
+                    <input type="text" id="usernameInput" placeholder="Votre prénom" style="width:100%; padding:0.75rem; border:1px solid #cbd5e0; border-radius:8px; margin-bottom:1rem;">
+                    <button id="loginBtn" style="width:100%; padding:0.75rem; background:var(--primary); color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer;">Entrer</button>
+                </div>
+            </div>
+            <!-- Tabs -->
+            <section id="production" class="tab active">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Rechercher un produit...">
+                    <button id="clearSearch" style="display:none;">Effacer</button>
+                </div>
+                <div class="product-list" id="productList"></div>
+                <div class="compute-container">
+                    <button id="computeBtn" class="compute-btn">Calculer</button>
+                </div>
+                <table class="result-table" id="resultTable">
+                    <thead><tr><th>Ingrédient</th><th>Poids total (g)</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+            <section id="timers" class="tab">
+                <div class="timers-section">
+                    <button class="add-timer-btn" id="addTimerBtn">Ajouter un minuteur</button>
+                    <div class="timers-container" id="timersContainer"></div>
+                </div>
+            </section>
+            <section id="chat" class="tab">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input-group">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Votre message...">
+                        <button id="sendBtn" class="send-btn">Envoyer</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script>
+    // Service worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('service-worker.js');
+        });
+    }
+    // Global variables
+    let recipesData = {};
+    let userName = '';
+    // Fetch recipes
+    fetch('recipes.json').then(r => r.json()).then(data => {
+        recipesData = data;
+        generateProductCards();
+    });
+    // Login logic
+    const loginScreen = document.getElementById('loginScreen');
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        const name = document.getElementById('usernameInput').value.trim();
+        if (!name) return;
+        userName = name;
+        document.getElementById('userNameDisplay').textContent = 'Bonjour, ' + userName;
+        loginScreen.style.display = 'none';
+    });
+    // Navigation logic
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            const tabName = item.getAttribute('data-tab');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById('pageTitle').textContent = item.querySelector('.label') ? item.querySelector('.label').textContent : '';
+            if (tabName === 'chat') loadMessages();
+        });
+    });
+    // Generate product cards
+    function generateProductCards() {
+        const container = document.getElementById('productList');
+        container.innerHTML = '';
+        Object.keys(recipesData).forEach(prod => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.setAttribute('data-product', prod.toLowerCase());
+            card.innerHTML = `<label>${prod}</label><input type="number" min="0" step="0.5" value="0">`;
+            container.appendChild(card);
+        });
+    }
+    // Search filter
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        document.getElementById('clearSearch').style.display = query ? 'block' : 'none';
+        document.querySelectorAll('.product-card').forEach(card => {
+            const name = card.getAttribute('data-product');
+            card.style.display = name.includes(query) ? 'flex' : 'none';
+        });
+    });
+    document.getElementById('clearSearch').addEventListener('click', () => {
+        searchInput.value = '';
+        document.querySelectorAll('.product-card').forEach(card => card.style.display = 'flex');
+        document.getElementById('clearSearch').style.display = 'none';
+    });
+    // Compute ingredients
+    document.getElementById('computeBtn').addEventListener('click', () => {
+        const totals = {};
+        document.querySelectorAll('.product-card').forEach(card => {
+            const prod = card.querySelector('label').textContent;
+            const qty = parseFloat(card.querySelector('input').value) || 0;
+            if (qty > 0) {
+                recipesData[prod].forEach(item => {
+                    const ing = item.ingredient;
+                    const w = item.baseWeight * qty;
+                    totals[ing] = (totals[ing] || 0) + w;
+                });
+            }
+        });
+        const tbody = document.querySelector('#resultTable tbody');
+        tbody.innerHTML = '';
+        if (Object.keys(totals).length === 0) {
+            tbody.innerHTML = '<tr><td colspan="2">Aucune quantité renseignée.</td></tr>';
+            return;
+        }
+        Object.entries(totals).sort((a,b) => a[0].localeCompare(b[0])).forEach(([ing,w]) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${ing}</td><td>${w.toFixed(2)}</td>`;
+            tbody.appendChild(tr);
+        });
+    });
+    // Timers logic
+    document.getElementById('addTimerBtn').addEventListener('click', () => addTimer());
+    function addTimer() {
+        const container = document.getElementById('timersContainer');
+        const card = document.createElement('div');
+        card.className = 'timer-card';
+        card.innerHTML = `
+            <input type="text" class="timer-label" placeholder="Nom du minuteur" style="margin-bottom:0.5rem; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px;">
+            <div class="inputs">
+                <input type="number" class="timer-minute" placeholder="Min" min="0" value="0">
+                <input type="number" class="timer-second" placeholder="Sec" min="0" max="59" value="0">
+            </div>
+            <div class="timer-display">00:00</div>
+            <div class="timer-controls">
+                <button class="start-btn"><i class="fa-solid fa-play"></i></button>
+                <button class="pause-btn"><i class="fa-solid fa-pause"></i></button>
+                <button class="reset-btn"><i class="fa-solid fa-rotate-left"></i></button>
+            </div>
+        `;
+        container.appendChild(card);
+        initTimer(card);
+    }
+    function initTimer(card) {
+        const minInput = card.querySelector('.timer-minute');
+        const secInput = card.querySelector('.timer-second');
+        const display = card.querySelector('.timer-display');
+        let remaining = 0;
+        let interval = null;
+        function updateDisplay() {
+            const m = Math.floor(remaining / 60);
+            const s = remaining % 60;
+            display.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+        }
+        card.querySelector('.start-btn').addEventListener('click', () => {
+            const m = parseInt(minInput.value) || 0;
+            const s = parseInt(secInput.value) || 0;
+            remaining = m * 60 + s;
+            if (remaining <= 0) return;
+            clearInterval(interval);
+            updateDisplay();
+            interval = setInterval(() => {
+                remaining--;
+                updateDisplay();
+                if (remaining <= 0) { clearInterval(interval); }
+            }, 1000);
+        });
+        card.querySelector('.pause-btn').addEventListener('click', () => {
+            clearInterval(interval);
+        });
+        card.querySelector('.reset-btn').addEventListener('click', () => {
+            clearInterval(interval);
+            remaining = 0;
+            updateDisplay();
+        });
+    }
+    // Chat logic
+    function loadMessages() {
+        const msgs = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+        const container = document.getElementById('chatMessages');
+        container.innerHTML = '';
+        msgs.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = 'message';
+            div.innerHTML = `<span class="user">${msg.user}</span><span class="time">${msg.time}</span><div>${msg.text}</div>`;
+            container.appendChild(div);
+        });
+        container.scrollTop = container.scrollHeight;
+    }
+    document.getElementById('sendBtn').addEventListener('click', () => {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        const msgs = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+        const now = new Date();
+        msgs.push({ user: userName || 'Utilisateur', time: now.toLocaleTimeString(), text });
+        localStorage.setItem('chatMessages', JSON.stringify(msgs));
+        input.value = '';
+        loadMessages();
+    });
+    </script>
+</body>
+</html>

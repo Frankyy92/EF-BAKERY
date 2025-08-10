@@ -1,0 +1,396 @@
+{
+  "KHORASAN BIO": [
+    {
+      "ingredient": "FARINE T80",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 800.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 25.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 2.0
+    },
+    {
+      "ingredient": "Levain Dur",
+      "baseWeight": 400.0
+    },
+    {
+      "ingredient": "Eau bassinage",
+      "baseWeight": 60.0
+    }
+  ],
+  "BALTIK": [
+    {
+      "ingredient": "Millésime",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 30.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 180.0
+    },
+    {
+      "ingredient": "Sucre",
+      "baseWeight": 100.0
+    },
+    {
+      "ingredient": "Lait",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Améliorants",
+      "baseWeight": 10.0
+    },
+    {
+      "ingredient": "Œufs",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Beurre",
+      "baseWeight": 150.0
+    }
+  ],
+  "COMPLET": [
+    {
+      "ingredient": "Millésime",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 30.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 180.0
+    },
+    {
+      "ingredient": "Sucre",
+      "baseWeight": 100.0
+    },
+    {
+      "ingredient": "Lait",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Améliorants",
+      "baseWeight": 10.0
+    },
+    {
+      "ingredient": "Œufs",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Beurre",
+      "baseWeight": 150.0
+    }
+  ],
+  "CÉRÉALES DES PRÈS ": [
+    {
+      "ingredient": "Millésime",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 30.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 180.0
+    },
+    {
+      "ingredient": "Sucre",
+      "baseWeight": 100.0
+    },
+    {
+      "ingredient": "Lait",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Améliorants",
+      "baseWeight": 10.0
+    },
+    {
+      "ingredient": "Œufs",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Beurre",
+      "baseWeight": 150.0
+    }
+  ],
+  "VIENNOIS NON BIO": [
+    {
+      "ingredient": "Millésime",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 30.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 180.0
+    },
+    {
+      "ingredient": "Sucre",
+      "baseWeight": 100.0
+    },
+    {
+      "ingredient": "Lait",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Améliorants",
+      "baseWeight": 10.0
+    },
+    {
+      "ingredient": "Œufs",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Beurre",
+      "baseWeight": 150.0
+    }
+  ],
+  "PAIN TIGRE NON BIO": [
+    {
+      "ingredient": "Farine Millésime",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Poudre de Lait",
+      "baseWeight": 60.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 20.0
+    },
+    {
+      "ingredient": "Sucre",
+      "baseWeight": 100.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 20.0
+    },
+    {
+      "ingredient": "Améliorants",
+      "baseWeight": 8.0
+    },
+    {
+      "ingredient": "Beurre",
+      "baseWeight": 180.0
+    }
+  ],
+  "TOURTE DE SEIGLE BIO": [
+    {
+      "ingredient": "Farine Seigle T170",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Eau à 55°C / 60°C",
+      "baseWeight": 1030.0
+    },
+    {
+      "ingredient": "Levain Dur",
+      "baseWeight": 750.0
+    },
+    {
+      "ingredient": "Sel de Guérande",
+      "baseWeight": 25.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 0.0
+    }
+  ],
+  "TOUTE DE MEULE BIO": [
+    {
+      "ingredient": "FARINE T80",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 800.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 25.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 2.0
+    },
+    {
+      "ingredient": "Levain Dur",
+      "baseWeight": 400.0
+    },
+    {
+      "ingredient": "Eau bassinage",
+      "baseWeight": 100.0
+    }
+  ],
+  "BLES PAYSANS BIO": [
+    {
+      "ingredient": "FARINE T80",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 800.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 25.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 2.0
+    },
+    {
+      "ingredient": "Levain Dur",
+      "baseWeight": 400.0
+    }
+  ],
+  "PETIT EPEAUTRE BIO": [
+    {
+      "ingredient": "Petit Epeautre",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 700.0
+    },
+    {
+      "ingredient": "Levain Dur",
+      "baseWeight": 500.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 25.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 0.0
+    }
+  ],
+  "PAIN Norvégien BIO": [
+    {
+      "ingredient": "FARINE Norvégien",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 20.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 7.0
+    },
+    {
+      "ingredient": "Miel",
+      "baseWeight": 25.0
+    },
+    {
+      "ingredient": "Levain Dur",
+      "baseWeight": 150.0
+    },
+    {
+      "ingredient": "Eau 20°",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Eau bassinage",
+      "baseWeight": 150.0
+    }
+  ],
+  "BRIOCHE (NON BIO)": [
+    {
+      "ingredient": "Farine Millesime T65",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 20.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 30.0
+    },
+    {
+      "ingredient": "Trimoline",
+      "baseWeight": 50.0
+    },
+    {
+      "ingredient": "Oeuf",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Pâte fermentée",
+      "baseWeight": 150.0
+    },
+    {
+      "ingredient": "Ameliorant",
+      "baseWeight": 10.0
+    },
+    {
+      "ingredient": "Sucre",
+      "baseWeight": 140.0
+    },
+    {
+      "ingredient": "Beurre",
+      "baseWeight": 400.0
+    }
+  ],
+  "TRADITION (NON BIO)": [
+    {
+      "ingredient": "Farine sauvage T65",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 700.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 20.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 4.0
+    },
+    {
+      "ingredient": "Eau de Bassinage",
+      "baseWeight": 30.0
+    }
+  ]
+}
