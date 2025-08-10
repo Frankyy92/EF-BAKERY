@@ -1,0 +1,5 @@
+recipes.json
+.DS_Store
+index.html
+manifest.json
+service-worker.js
