@@ -6,12 +6,25 @@
 // version immediately.  The service worker also calls
 // skipWaiting()/clients.claim() so that it takes control without
 // waiting for all tabs to close.
-const CACHE_NAME = 'boulangerie-cache-v4';
+// Bump the cache version whenever any static asset changes, including the new
+// local SVG icons added for navigation.  This ensures users always get the
+// latest files after a deployment.  See install handler below.
+const CACHE_NAME = 'boulangerie-cache-v5';
 const urlsToCache = [
   '.',
   'index.html',
   'manifest.json',
-  'recipes.json'
+  'recipes.json',
+  'service-worker.js',
+  'logo_white.png',
+  'logo_black.png',
+  'icons/house.svg',
+  'icons/calculator.svg',
+  'icons/stopwatch.svg',
+  'icons/comments.svg',
+  'icons/book-open.svg',
+  'icons/chart-line.svg',
+  'icons/calendar-days.svg'
 ];
 // Install event: cache the core assets and activate this service worker
 // immediately without waiting for existing clients to close.
