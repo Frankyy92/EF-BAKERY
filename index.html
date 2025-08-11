@@ -628,7 +628,7 @@
     // fall back to DEFAULT_RECIPES defined above.  Once recipes are
     // available, call loadCustomRecipes(), generateProductCards() and
     // populateRecipeSelect().
-    fetch('recipes.json').then(res => {
+    fetch('recipes-new.json').then(res => {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
     }).then(data => {
@@ -1076,8 +1076,6 @@
     // paper and other consumables, while labour covers the direct time spent
     // producing one kilogram of product.  These constants are used to
     // estimate overheads in the cost of goods table.
-    const packagingCostPerKg = 0.15;
-    const labourCostPerKg = 2.0;
     function loadIngredientPrices() {
         const stored = localStorage.getItem('ingredientPrices');
         if (stored) {
