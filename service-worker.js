@@ -6,18 +6,14 @@
 // version immediately.  The service worker also calls
 // skipWaiting()/clients.claim() so that it takes control without
 // waiting for all tabs to close.
-// Bump the cache version whenever any static asset changes, including the new
-// local SVG icons added for navigation.  This ensures users always get the
-// latest files after a deployment.  See install handler below.
+// Incremented cache version to invalidate old caches when deploying new assets.
 const CACHE_NAME = 'boulangerie-cache-v5';
 const urlsToCache = [
   '.',
   'index.html',
   'manifest.json',
   'recipes.json',
-  'service-worker.js',
-  'logo_white.png',
-  'logo_black.png',
+  // Pre-cache locally hosted icons so navigation icons are available offline.
   'icons/house.svg',
   'icons/calculator.svg',
   'icons/stopwatch.svg',

@@ -6,7 +6,7 @@
     <title>Gestion de Boulangerie</title>
     <!-- PWA manifest -->
     <link rel="manifest" href="manifest.json">
-    <!-- Font Awesome for icons (still used in timers and other widgets).  The navigation icons are provided locally to avoid CDN issues on mobile. -->
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-xX2rY7+ueVMljpePGqlmZZ/97S+k7hv+l9lgnsfGWhjVuP4mfzEwoZwPqWZRBNImljqsNnhHJwraLNbM1jF6nA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Google font Karoll Found (if available) -->
     <link href="https://fonts.googleapis.com/css2?family=Karoll+Found&display=swap" rel="stylesheet">
@@ -87,14 +87,6 @@
         .nav-item.active { background: rgba(255,255,255,0.2); }
         .nav-item i { width: 20px; text-align: center; }
         .nav-item .label { flex: 1; font-weight: 500; }
-
-        /* Locally embedded icons for navigation.  The SVGs are black by default so we invert
-           them to white inside the dark sidebar. */
-        .nav-icon {
-            width: 20px;
-            height: 20px;
-            filter: invert(100%);
-        }
         /* Main area */
         .main {
             flex: 1;
@@ -317,26 +309,27 @@
         /*
          * Responsive adjustments
          *
-         * When the viewport is narrow (mobile devices), compress the sidebar
-         * and hide the text labels so that the main content has more room.
-         * Also allow the login card to use more of the available width so
-         * that it doesn't overflow the viewport on smaller screens.
+         * On narrow viewports (phones), we keep the sidebar wide enough to show
+         * both the icon and its label.  Only the “Boulangerie” text next to
+         * the logo is hidden to save space, and the login card stretches
+         * across most of the screen.  We no longer hide the navigation
+         * labels on mobile because the user reported they want to see them.
          */
         @media (max-width: 768px) {
-            /* Reduce the sidebar width and padding */
+            /* Keep the sidebar at its full width on mobile so the labels remain visible */
             .sidebar {
-                width: 60px;
-                padding: 1rem 0.5rem;
+                width: 240px;
+                padding: 1.5rem 1rem;
             }
-            /* Hide the “Boulangerie” text next to the logo */
+            /* Hide only the text next to the logo */
             .sidebar .logo span {
                 display: none;
             }
-            /* Hide the labels on the navigation items to show only icons */
+            /* Ensure the navigation item labels remain visible */
             .nav-item .label {
-                display: none;
+                display: inline;
             }
-            /* Ensure the login card spans most of the viewport on mobile */
+            /* Allow the login card to be wider on mobile */
             #loginScreen > div {
                 width: 90%;
                 max-width: 90%;
@@ -471,13 +464,7 @@
         /* Hidden by default */
         .tab { display: none; }
         .tab.active { display: block; }
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .sidebar { width: 70px; padding: 1rem 0.5rem; }
-            .sidebar .logo { justify-content: center; }
-            .sidebar .logo span { display: none; }
-            .nav-item .label { display: none; }
-        }
+        /* Remove duplicate responsive block: handled above */
     </style>
 </head>
 <body>
@@ -489,34 +476,13 @@
         </div>
         <ul class="nav-list">
             <!-- Accueil (home) tab placed at the top so that you can publish news and photos -->
-            <li class="nav-item" data-tab="home">
-                <img src="icons/house.svg" alt="Accueil" class="nav-icon" />
-                <span class="label">Accueil</span>
-            </li>
-            <li class="nav-item active" data-tab="production">
-                <img src="icons/calculator.svg" alt="Production" class="nav-icon" />
-                <span class="label">Production</span>
-            </li>
-            <li class="nav-item" data-tab="timers">
-                <img src="icons/stopwatch.svg" alt="Minuteurs" class="nav-icon" />
-                <span class="label">Minuteurs</span>
-            </li>
-            <li class="nav-item" data-tab="chat">
-                <img src="icons/comments.svg" alt="Chat" class="nav-icon" />
-                <span class="label">Chat</span>
-            </li>
-            <li class="nav-item" data-tab="recipes">
-                <img src="icons/book-open.svg" alt="Recettes" class="nav-icon" />
-                <span class="label">Recettes</span>
-            </li>
-            <li class="nav-item" data-tab="costs">
-                <img src="icons/chart-line.svg" alt="Coûts" class="nav-icon" />
-                <span class="label">Coûts</span>
-            </li>
-            <li class="nav-item" data-tab="planning">
-                <img src="icons/calendar-days.svg" alt="Planning" class="nav-icon" />
-                <span class="label">Planning</span>
-            </li>
+            <li class="nav-item" data-tab="home"><i class="fa-solid fa-house"></i><span class="label">Accueil</span></li>
+            <li class="nav-item active" data-tab="production"><i class="fa-solid fa-calculator"></i><span class="label">Production</span></li>
+            <li class="nav-item" data-tab="timers"><i class="fa-solid fa-stopwatch"></i><span class="label">Minuteurs</span></li>
+            <li class="nav-item" data-tab="chat"><i class="fa-solid fa-comments"></i><span class="label">Chat</span></li>
+            <li class="nav-item" data-tab="recipes"><i class="fa-solid fa-book-open"></i><span class="label">Recettes</span></li>
+            <li class="nav-item" data-tab="costs"><i class="fa-solid fa-chart-line"></i><span class="label">Coûts</span></li>
+            <li class="nav-item" data-tab="planning"><i class="fa-solid fa-calendar-alt"></i><span class="label">Planning</span></li>
         </ul>
     </nav>
     <!-- Main content area -->
