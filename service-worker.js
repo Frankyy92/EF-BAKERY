@@ -1,4 +1,7 @@
-const CACHE_NAME = 'boulangerie-cache-v2';
+// Update the cache name whenever static assets change so that the service
+// worker fetches fresh versions.  Incrementing the version number here
+// invalidates older caches and fixes stale files on users’ devices.
+const CACHE_NAME = 'boulangerie-cache-v3';
 const urlsToCache = [
   '.',
   'index.html',
