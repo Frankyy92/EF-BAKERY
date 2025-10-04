@@ -1,4 +1,42 @@
 {
+  "VIENNOIS NON BIO": [
+    {
+      "ingredient": "Millésime",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 20.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 20.0
+    },
+    {
+      "ingredient": "Sucre",
+      "baseWeight": 100.0
+    },
+    {
+      "ingredient": "Lait",
+      "baseWeight": 400.0
+    },
+    {
+      "ingredient": "Améliorants",
+      "baseWeight": 0.0
+    },
+    {
+      "ingredient": "Œufs",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Beurre",
+      "baseWeight": 150.0
+    }
+  ],
   "KHORASAN BIO": [
     {
       "ingredient": "FARINE T80",
@@ -101,45 +139,7 @@
       "baseWeight": 150.0
     }
   ],
-  "CÉRÉALES DES PRÈS ": [
-    {
-      "ingredient": "Millésime",
-      "baseWeight": 1000.0
-    },
-    {
-      "ingredient": "Levure",
-      "baseWeight": 30.0
-    },
-    {
-      "ingredient": "Sel",
-      "baseWeight": 180.0
-    },
-    {
-      "ingredient": "Sucre",
-      "baseWeight": 100.0
-    },
-    {
-      "ingredient": "Lait",
-      "baseWeight": 600.0
-    },
-    {
-      "ingredient": "Améliorants",
-      "baseWeight": 10.0
-    },
-    {
-      "ingredient": "Œufs",
-      "baseWeight": 300.0
-    },
-    {
-      "ingredient": "Eau",
-      "baseWeight": 300.0
-    },
-    {
-      "ingredient": "Beurre",
-      "baseWeight": 150.0
-    }
-  ],
-  "VIENNOIS NON BIO": [
+  "CÉRÉALES DES PRÈS": [
     {
       "ingredient": "Millésime",
       "baseWeight": 1000.0

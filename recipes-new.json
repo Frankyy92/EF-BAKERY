@@ -1,0 +1,118 @@
+{
+  "VIENNOIS NON BIO": [
+    {
+      "ingredient": "Millésime",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 20.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 20.0
+    },
+    {
+      "ingredient": "Sucre",
+      "baseWeight": 100.0
+    },
+    {
+      "ingredient": "Lait",
+      "baseWeight": 400.0
+    },
+    {
+      "ingredient": "Œufs",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Beurre",
+      "baseWeight": 150.0
+    }
+  ],
+  "TOURTE DE SEIGLE BIO": [
+    {
+      "ingredient": "Farine Seigle T170",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Eau à 55°C / 60°C",
+      "baseWeight": 1030.0
+    },
+    {
+      "ingredient": "Levain Dur",
+      "baseWeight": 750.0
+    },
+    {
+      "ingredient": "Sel de Guérande",
+      "baseWeight": 25.0
+    }
+  ],
+  "BALTIK": [
+    {
+      "ingredient": "Millésime",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 30.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 180.0
+    },
+    {
+      "ingredient": "Sucre",
+      "baseWeight": 100.0
+    },
+    {
+      "ingredient": "Lait",
+      "baseWeight": 600.0
+    },
+    {
+      "ingredient": "Améliorants",
+      "baseWeight": 10.0
+    },
+    {
+      "ingredient": "Œufs",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 300.0
+    },
+    {
+      "ingredient": "Beurre",
+      "baseWeight": 150.0
+    }
+  ],
+  "KHORASAN BIO": [
+    {
+      "ingredient": "FARINE T80",
+      "baseWeight": 1000.0
+    },
+    {
+      "ingredient": "Eau",
+      "baseWeight": 800.0
+    },
+    {
+      "ingredient": "Sel",
+      "baseWeight": 25.0
+    },
+    {
+      "ingredient": "Levure",
+      "baseWeight": 2.0
+    },
+    {
+      "ingredient": "Levain Dur",
+      "baseWeight": 400.0
+    },
+    {
+      "ingredient": "Eau bassinage",
+      "baseWeight": 60.0
+    }
+  ]
+}

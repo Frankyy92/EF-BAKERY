@@ -8,24 +8,48 @@
     <link rel="manifest" href="manifest.json">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-xX2rY7+ueVMljpePGqlmZZ/97S+k7hv+l9lgnsfGWhjVuP4mfzEwoZwPqWZRBNImljqsNnhHJwraLNbM1jF6nA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google font Karoll Found (if available) -->
+    <link href="https://fonts.googleapis.com/css2?family=Karoll+Found&display=swap" rel="stylesheet">
     <style>
         /* Colour palette inspired by Otami */
         :root {
-            --sidebar-bg: #0E3A5C;
-            --sidebar-accent: #1E5E8E;
-            --primary: #00A86B;
-            --warning: #F6B93B;
+            /* Palette personnalisée : marron chocolat et beige clair */
+            --sidebar-bg: #4b2e24;           /* chocolat foncé */
+            --sidebar-accent: #704a35;       /* chocolat plus clair */
+            --primary: #8B4513;             /* brun moyen pour les boutons */
+            --warning: #C58B5D;             /* beige orangé pour accents */
             --text-light: #FFFFFF;
-            --text-dark: #2D3748;
-            --bg-light: #F5F6F8;
+            --text-dark: #2D1B14;
+            --bg-light: #F8F4E3;           /* beige clair pour arrière-plan */
+            --card-bg: #F9F4E8;            /* beige très clair pour cartes */
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Karoll Found', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-light);
+            position: relative;
             display: flex;
             min-height: 100vh;
             color: var(--text-dark);
+        }
+
+        /* Watermark logo in the background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('logo_black.png');
+            background-repeat: no-repeat;
+            /* Move the watermark toward the right side of the page */
+            /* Move the watermark further to the right so it doesn't interfere with content */
+            background-position: 85% center;
+            background-size: 60% auto;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
         }
         /* Sidebar styles */
         .sidebar {
@@ -72,7 +96,7 @@
         }
         .main-header {
             height: 60px;
-            background: #ffffff;
+            background: var(--card-bg);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -123,7 +147,7 @@
             gap: 1rem;
         }
         .product-card {
-            background: #fff;
+            background: var(--card-bg);
             border-radius: 10px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             padding: 1rem;
@@ -169,6 +193,17 @@
             background: #f9fafb;
             text-align: left;
         }
+
+        /* Make the first column of recipe tables sticky so the ingredient names remain visible
+           when horizontally scrolling.  The background ensures it stands out from the rest of the
+           table.  A higher z-index prevents it from being overlapped by other cells. */
+        #recipesContainer .result-table th:first-child,
+        #recipesContainer .result-table td:first-child {
+            position: sticky;
+            left: 0;
+            background: var(--card-bg);
+            z-index: 2;
+        }
         /* Timer cards */
         .timers-section .add-timer-btn {
             padding: 0.75rem 1rem;
@@ -186,12 +221,43 @@
             margin-top: 1rem;
         }
         .timer-card {
-            background: #fff;
-            border-radius: 10px;
+            position: relative;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             padding: 1rem;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Highlight and flash when a timer completes */
+        .timer-card.completed {
+            border-color: #e53e3e;
+        }
+        .timer-card.flash {
+            background: #ffe5e5;
+        }
+        .timer-card .card-accent {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--warning), #F78E69);
+            border-bottom-left-radius: 30px;
+        }
+        .timer-card .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--sidebar-bg);
+        }
+        .timer-card .card-header i {
+            color: var(--primary);
         }
         .timer-card .inputs {
             display: flex;
@@ -205,12 +271,12 @@
             border-radius: 6px;
         }
         .timer-display {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-family: 'Courier New', monospace;
             text-align: center;
             padding: 0.5rem;
-            background: #000;
-            color: #00ff00;
+            background: #f1f5f9;
+            color: var(--sidebar-bg);
             border-radius: 8px;
             margin-bottom: 0.5rem;
         }
@@ -230,6 +296,45 @@
         .start-btn { background: var(--primary); }
         .pause-btn { background: #e9892c; }
         .reset-btn { background: #e53e3e; }
+        /* Flashing effect for completed timers */
+        @keyframes flash {
+            0%, 100% { background: #fff5f5; }
+            50% { background: #feb2b2; }
+        }
+        .timer-card.completed .timer-display {
+            animation: flash 1s steps(1, start) infinite;
+            color: #C53030;
+        }
+
+        /*
+         * Responsive adjustments
+         *
+         * On narrow viewports (phones), we keep the sidebar wide enough to show
+         * both the icon and its label.  Only the “Boulangerie” text next to
+         * the logo is hidden to save space, and the login card stretches
+         * across most of the screen.  We no longer hide the navigation
+         * labels on mobile because the user reported they want to see them.
+         */
+        @media (max-width: 768px) {
+            /* Keep the sidebar at its full width on mobile so the labels remain visible */
+            .sidebar {
+                width: 240px;
+                padding: 1.5rem 1rem;
+            }
+            /* Hide only the text next to the logo */
+            .sidebar .logo span {
+                display: none;
+            }
+            /* Ensure the navigation item labels remain visible */
+            .nav-item .label {
+                display: inline;
+            }
+            /* Allow the login card to be wider on mobile */
+            #loginScreen > div {
+                width: 90%;
+                max-width: 90%;
+            }
+        }
         /* Chat styles */
         .chat-container {
             background: #fff;
@@ -283,26 +388,101 @@
             font-size: 0.75rem;
             color: #718096;
         }
+
+        /* Overlay for editing/creating recipes */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 {
+            margin-bottom: 1rem;
+            color: var(--sidebar-bg);
+        }
+        .modal-content input[type="text"],
+        .modal-content input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+        .modal-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .modal-content th,
+        .modal-content td {
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        .modal-content .ingredient-row td {
+            vertical-align: middle;
+        }
+        .modal-content .ingredient-row button {
+            border: none;
+            background: none;
+            color: #e53e3e;
+            cursor: pointer;
+        }
+        .modal-actions {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+        .manage-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: var(--text-light);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .manage-btn:hover {
+            background: #008f5a;
+        }
         /* Hidden by default */
         .tab { display: none; }
         .tab.active { display: block; }
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .sidebar { width: 70px; padding: 1rem 0.5rem; }
-            .sidebar .logo { justify-content: center; }
-            .sidebar .logo span { display: none; }
-            .nav-item .label { display: none; }
-        }
+        /* Remove duplicate responsive block: handled above */
     </style>
 </head>
 <body>
     <!-- Sidebar navigation -->
     <nav class="sidebar">
-        <div class="logo"><i class="fa-solid fa-bread-slice"></i><span>Boulangerie</span></div>
+        <div class="logo" style="display:flex; align-items:center; gap:0.5rem; margin-bottom:2rem;">
+            <img src="logo_white.png" alt="Logo" style="height:32px; width:auto;">
+            <span style="font-size:1.4rem; font-weight:700;">Boulangerie</span>
+        </div>
         <ul class="nav-list">
+            <!-- Accueil (home) tab placed at the top so that you can publish news and photos -->
+            <li class="nav-item" data-tab="home"><i class="fa-solid fa-house"></i><span class="label">Accueil</span></li>
             <li class="nav-item active" data-tab="production"><i class="fa-solid fa-calculator"></i><span class="label">Production</span></li>
             <li class="nav-item" data-tab="timers"><i class="fa-solid fa-stopwatch"></i><span class="label">Minuteurs</span></li>
             <li class="nav-item" data-tab="chat"><i class="fa-solid fa-comments"></i><span class="label">Chat</span></li>
+            <li class="nav-item" data-tab="recipes"><i class="fa-solid fa-book-open"></i><span class="label">Recettes</span></li>
+            <li class="nav-item" data-tab="costs"><i class="fa-solid fa-chart-line"></i><span class="label">Coûts</span></li>
+            <li class="nav-item" data-tab="planning"><i class="fa-solid fa-calendar-alt"></i><span class="label">Planning</span></li>
         </ul>
     </nav>
     <!-- Main content area -->
@@ -322,6 +502,19 @@
                 </div>
             </div>
             <!-- Tabs -->
+            <!-- Accueil tab for news and photos -->
+            <section id="home" class="tab">
+                <h2 style="margin-bottom:1rem;">Accueil</h2>
+                <!-- Formulaire pour ajouter des actualités (titre + contenu) -->
+                <form id="newsForm" style="margin-bottom:1rem; display:flex; flex-direction:column; gap:0.5rem; max-width:600px;">
+                    <input type="text" id="newsTitle" placeholder="Titre de l'actualité" style="padding:0.5rem; border:1px solid #cbd5e0; border-radius:6px;" />
+                    <textarea id="newsContent" placeholder="Contenu" rows="3" style="padding:0.5rem; border:1px solid #cbd5e0; border-radius:6px;"></textarea>
+                    <button type="button" id="addNewsBtn" class="compute-btn" style="width:fit-content;">Ajouter une actualité</button>
+                </form>
+                <!-- Container for news posts -->
+                <div id="newsContainer"></div>
+            </section>
+
             <section id="production" class="tab active">
                 <div class="search-bar">
                     <input type="text" id="searchInput" placeholder="Rechercher un produit...">
@@ -335,6 +528,8 @@
                     <thead><tr><th>Ingrédient</th><th>Poids total (g)</th></tr></thead>
                     <tbody></tbody>
                 </table>
+                <!-- Recap per recipe: populated after calculation -->
+                <div id="recipeRecap" style="margin-top:1.5rem;"></div>
             </section>
             <section id="timers" class="tab">
                 <div class="timers-section">
@@ -351,6 +546,75 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Recipes Tab -->
+            <section id="recipes" class="tab">
+                <div style="margin-bottom:1rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
+                    <label for="recipeSelect" style="font-weight:600;">Choisir une recette :</label>
+                    <select id="recipeSelect" style="flex:1; min-width:150px; padding:0.5rem; border:1px solid #cbd5e0; border-radius:6px;"></select>
+                    <button id="manageRecipesBtn" class="manage-btn" type="button">Gérer les recettes</button>
+                </div>
+                <div id="recipesContainer" class="product-list"></div>
+
+                <!-- Recipe management overlay -->
+                <div id="recipeOverlay" class="modal-overlay">
+                    <div class="modal-content">
+                        <h3 id="modalTitle">Nouvelle recette</h3>
+                        <div style="margin-bottom:0.5rem;">
+                            <label for="recipeNameInput" style="font-weight:600;">Nom de la recette</label>
+                            <input type="text" id="recipeNameInput" placeholder="Nom de la recette">
+                        </div>
+                        <table>
+                            <thead>
+                                <tr><th>Ingrédient</th><th>Poids base (g)</th><th>Action</th></tr>
+                            </thead>
+                            <tbody id="ingredientTableBody"></tbody>
+                        </table>
+                        <div style="margin-top:0.5rem;">
+                            <button id="addIngredientBtn" type="button" class="manage-btn" style="background:var(--warning); color:var(--text-dark);">Ajouter un ingrédient</button>
+                        </div>
+                        <div class="modal-actions">
+                            <button id="saveRecipeBtn" type="button" class="manage-btn">Enregistrer</button>
+                            <button id="cancelRecipeBtn" type="button" class="manage-btn" style="background:#e53e3e;">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Costs Tab -->
+            <section id="costs" class="tab">
+                <h2 style="margin-bottom:1rem;">Coûts de revient</h2>
+                <div style="margin-bottom:1rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
+                    <label for="costRecipeSelect" style="font-weight:600;">Choisir une recette :</label>
+                    <select id="costRecipeSelect" style="flex:1; min-width:150px; padding:0.5rem; border:1px solid #cbd5e0; border-radius:6px;"></select>
+                </div>
+                <div id="costTableContainer"></div>
+            </section>
+
+            <!-- Planning Tab -->
+            <section id="planning" class="tab">
+                <h2 style="margin-bottom:1rem;">Planning de production</h2>
+                <form id="planningForm" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:flex-end; margin-bottom:1rem;">
+                    <div style="flex:1; min-width:150px;">
+                        <label for="planningDate" style="font-weight:600;">Date</label>
+                        <input type="date" id="planningDate" style="width:100%; padding:0.5rem; border:1px solid #cbd5e0; border-radius:6px;">
+                    </div>
+                    <div style="flex:1; min-width:150px;">
+                        <label for="planningTime" style="font-weight:600;">Heure</label>
+                        <input type="time" id="planningTime" style="width:100%; padding:0.5rem; border:1px solid #cbd5e0; border-radius:6px;">
+                    </div>
+                    <div style="flex:1; min-width:150px;">
+                        <label for="planningRecipe" style="font-weight:600;">Recette</label>
+                        <select id="planningRecipe" style="width:100%; padding:0.5rem; border:1px solid #cbd5e0; border-radius:6px;"></select>
+                    </div>
+                    <div style="width:100px;">
+                        <label for="planningQuantity" style="font-weight:600;">Quantité</label>
+                        <input type="number" id="planningQuantity" min="1" value="1" style="width:100%; padding:0.5rem; border:1px solid #cbd5e0; border-radius:6px;">
+                    </div>
+                    <button type="button" id="addPlanningBtn" class="manage-btn" style="background:var(--primary); color:var(--text-light);">Ajouter</button>
+                </form>
+                <div id="planningTasksContainer"></div>
+            </section>
         </div>
     </div>
     <script>
@@ -362,11 +626,165 @@
     }
     // Global variables
     let recipesData = {};
+    // Store user-created or modified recipes
+    let customRecipes = {};
     let userName = '';
-    // Fetch recipes
-    fetch('recipes.json').then(r => r.json()).then(data => {
+
+    /*
+     * Default recipes are embedded directly in the page.  This provides
+     * a fallback when the recipes.json file fails to load (for example
+     * when the PWA is served from a different folder or when the service
+     * worker intercepts the request).  The structure mirrors that of
+     * recipes.json: an object keyed by recipe name containing an array of
+     * objects with `ingredient` and `baseWeight` fields.
+     */
+    // Preloaded recipes derived from the bakery’s spreadsheet.
+    // Only the 1 kg versions of each recipe are included.  Each entry’s
+    // `baseWeight` corresponds to the ingredient quantity for a single loaf,
+    // similar to the Tourte de Seigle reference recipe.
+    const DEFAULT_RECIPES = {
+      "VIENNOIS NON BIO": [
+        { "ingredient": "Millésime", "baseWeight": 1000.0 },
+        { "ingredient": "Levure", "baseWeight": 20.0 },
+        { "ingredient": "Sel", "baseWeight": 20.0 },
+        { "ingredient": "Sucre", "baseWeight": 100.0 },
+        { "ingredient": "Lait", "baseWeight": 400.0 },
+        { "ingredient": "Améliorants", "baseWeight": 0.0 },
+        { "ingredient": "Œufs", "baseWeight": 600.0 },
+        { "ingredient": "Eau", "baseWeight": 600.0 },
+        { "ingredient": "Beurre", "baseWeight": 150.0 }
+      ],
+      "KHORASAN BIO": [
+        { "ingredient": "FARINE T80", "baseWeight": 1000.0 },
+        { "ingredient": "Eau", "baseWeight": 800.0 },
+        { "ingredient": "Sel", "baseWeight": 25.0 },
+        { "ingredient": "Levure", "baseWeight": 2.0 },
+        { "ingredient": "Levain Dur", "baseWeight": 400.0 },
+        { "ingredient": "Eau bassinage", "baseWeight": 60.0 }
+      ],
+      "BALTIK": [
+        { "ingredient": "Millésime", "baseWeight": 1000.0 },
+        { "ingredient": "Levure", "baseWeight": 30.0 },
+        { "ingredient": "Sel", "baseWeight": 180.0 },
+        { "ingredient": "Sucre", "baseWeight": 100.0 },
+        { "ingredient": "Lait", "baseWeight": 600.0 },
+        { "ingredient": "Améliorants", "baseWeight": 10.0 },
+        { "ingredient": "Œufs", "baseWeight": 300.0 },
+        { "ingredient": "Eau", "baseWeight": 300.0 },
+        { "ingredient": "Beurre", "baseWeight": 150.0 }
+      ],
+      "COMPLET": [
+        { "ingredient": "Millésime", "baseWeight": 1000.0 },
+        { "ingredient": "Levure", "baseWeight": 30.0 },
+        { "ingredient": "Sel", "baseWeight": 180.0 },
+        { "ingredient": "Sucre", "baseWeight": 100.0 },
+        { "ingredient": "Lait", "baseWeight": 600.0 },
+        { "ingredient": "Améliorants", "baseWeight": 10.0 },
+        { "ingredient": "Œufs", "baseWeight": 300.0 },
+        { "ingredient": "Eau", "baseWeight": 300.0 },
+        { "ingredient": "Beurre", "baseWeight": 150.0 }
+      ],
+      "CÉRÉALES DES PRÈS": [
+        { "ingredient": "Millésime", "baseWeight": 1000.0 },
+        { "ingredient": "Levure", "baseWeight": 30.0 },
+        { "ingredient": "Sel", "baseWeight": 180.0 },
+        { "ingredient": "Sucre", "baseWeight": 100.0 },
+        { "ingredient": "Lait", "baseWeight": 600.0 },
+        { "ingredient": "Améliorants", "baseWeight": 10.0 },
+        { "ingredient": "Œufs", "baseWeight": 300.0 },
+        { "ingredient": "Eau", "baseWeight": 300.0 },
+        { "ingredient": "Beurre", "baseWeight": 150.0 }
+      ],
+      "PAIN TIGRE NON BIO": [
+        { "ingredient": "Farine Millésime", "baseWeight": 1000.0 },
+        { "ingredient": "Eau", "baseWeight": 600.0 },
+        { "ingredient": "Poudre de Lait", "baseWeight": 60.0 },
+        { "ingredient": "Sel", "baseWeight": 20.0 },
+        { "ingredient": "Sucre", "baseWeight": 100.0 },
+        { "ingredient": "Levure", "baseWeight": 20.0 },
+        { "ingredient": "Améliorants", "baseWeight": 8.0 },
+        { "ingredient": "Beurre", "baseWeight": 180.0 }
+      ],
+      "TOURTE DE SEIGLE BIO": [
+        { "ingredient": "Farine Seigle T170", "baseWeight": 1000.0 },
+        { "ingredient": "Eau à 55°C / 60°C", "baseWeight": 1030.0 },
+        { "ingredient": "Levain Dur", "baseWeight": 750.0 },
+        { "ingredient": "Sel de Guérande", "baseWeight": 25.0 },
+        { "ingredient": "Levure", "baseWeight": 0.0 }
+      ],
+      "TOUTE DE MEULE BIO": [
+        { "ingredient": "FARINE T80", "baseWeight": 1000.0 },
+        { "ingredient": "Eau", "baseWeight": 800.0 },
+        { "ingredient": "Sel", "baseWeight": 25.0 },
+        { "ingredient": "Levure", "baseWeight": 2.0 },
+        { "ingredient": "Levain Dur", "baseWeight": 400.0 },
+        { "ingredient": "Eau bassinage", "baseWeight": 100.0 }
+      ],
+      "BLES PAYSANS BIO": [
+        { "ingredient": "FARINE T80", "baseWeight": 1000.0 },
+        { "ingredient": "Eau", "baseWeight": 800.0 },
+        { "ingredient": "Sel", "baseWeight": 25.0 },
+        { "ingredient": "Levure", "baseWeight": 2.0 },
+        { "ingredient": "Levain Dur", "baseWeight": 400.0 }
+      ],
+      "PETIT EPEAUTRE BIO": [
+        { "ingredient": "Petit Epeautre", "baseWeight": 1000.0 },
+        { "ingredient": "Eau", "baseWeight": 700.0 },
+        { "ingredient": "Levain Dur", "baseWeight": 500.0 },
+        { "ingredient": "Sel", "baseWeight": 25.0 },
+        { "ingredient": "Levure", "baseWeight": 0.0 }
+      ],
+      "PAIN Norvégien BIO": [
+        { "ingredient": "FARINE Norvégien", "baseWeight": 1000.0 },
+        { "ingredient": "Sel", "baseWeight": 20.0 },
+        { "ingredient": "Levure", "baseWeight": 7.0 },
+        { "ingredient": "Miel", "baseWeight": 25.0 },
+        { "ingredient": "Levain Dur", "baseWeight": 150.0 },
+        { "ingredient": "Eau 20°", "baseWeight": 600.0 },
+        { "ingredient": "Eau bassinage", "baseWeight": 150.0 }
+      ],
+      "BRIOCHE (NON BIO)": [
+        { "ingredient": "Farine Millesime T65", "baseWeight": 1000.0 },
+        { "ingredient": "Sel", "baseWeight": 20.0 },
+        { "ingredient": "Levure", "baseWeight": 30.0 },
+        { "ingredient": "Trimoline", "baseWeight": 50.0 },
+        { "ingredient": "Oeuf", "baseWeight": 600.0 },
+        { "ingredient": "Pâte fermentée", "baseWeight": 150.0 },
+        { "ingredient": "Ameliorant", "baseWeight": 10.0 },
+        { "ingredient": "Sucre", "baseWeight": 140.0 },
+        { "ingredient": "Beurre", "baseWeight": 400.0 }
+      ],
+      "TRADITION (NON BIO)": [
+        { "ingredient": "Farine sauvage T65", "baseWeight": 1000.0 },
+        { "ingredient": "Eau", "baseWeight": 700.0 },
+        { "ingredient": "Sel", "baseWeight": 20.0 },
+        { "ingredient": "Levure", "baseWeight": 4.0 },
+        { "ingredient": "Eau de Bassinage", "baseWeight": 30.0 }
+      ]
+    };
+
+    // Attempt to fetch recipes from recipes.json. If the request fails,
+    // fall back to DEFAULT_RECIPES defined above.  Once recipes are
+    // available, call loadCustomRecipes(), generateProductCards() and
+    // populateRecipeSelect().
+    fetch('recipes.json').then(res => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+    }).then(data => {
         recipesData = data;
+        loadCustomRecipes();
         generateProductCards();
+        populateRecipeSelect();
+        populateCostRecipeSelect();
+        populatePlanningSelect();
+    }).catch(err => {
+        console.warn('Impossible de charger recipes.json, utilisation des recettes par défaut', err);
+        recipesData = DEFAULT_RECIPES;
+        loadCustomRecipes();
+        generateProductCards();
+        populateRecipeSelect();
+        populateCostRecipeSelect();
+        populatePlanningSelect();
     });
     // Login logic
     const loginScreen = document.getElementById('loginScreen');
@@ -386,7 +804,13 @@
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             document.getElementById('pageTitle').textContent = item.querySelector('.label') ? item.querySelector('.label').textContent : '';
-            if (tabName === 'chat') loadMessages();
+            if (tabName === 'chat') {
+                loadMessages();
+            } else if (tabName === 'home') {
+                // Refresh news when navigating to the Accueil tab
+                loadNews();
+                renderNews();
+            }
         });
     });
     // Generate product cards
@@ -397,7 +821,8 @@
             const card = document.createElement('div');
             card.className = 'product-card';
             card.setAttribute('data-product', prod.toLowerCase());
-            card.innerHTML = `<label>${prod}</label><input type="number" min="0" step="0.5" value="0">`;
+            // Each product card asks for number of pieces to produce.
+            card.innerHTML = `<label>${prod}</label><input type="number" min="0" step="1" value="0" placeholder="Nb pièces">`;
             container.appendChild(card);
         });
     }
@@ -419,10 +844,13 @@
     // Compute ingredients
     document.getElementById('computeBtn').addEventListener('click', () => {
         const totals = {};
-        document.querySelectorAll('.product-card').forEach(card => {
+        const selectedQuantities = {};
+        // Only consider product cards in the production section (avoid recipe cards elsewhere)
+        document.querySelectorAll('#production .product-card').forEach(card => {
             const prod = card.querySelector('label').textContent;
             const qty = parseFloat(card.querySelector('input').value) || 0;
             if (qty > 0) {
+                selectedQuantities[prod] = qty;
                 recipesData[prod].forEach(item => {
                     const ing = item.ingredient;
                     const w = item.baseWeight * qty;
@@ -434,6 +862,8 @@
         tbody.innerHTML = '';
         if (Object.keys(totals).length === 0) {
             tbody.innerHTML = '<tr><td colspan="2">Aucune quantité renseignée.</td></tr>';
+            // Clear any previous recap
+            showRecipeRecap({});
             return;
         }
         Object.entries(totals).sort((a,b) => a[0].localeCompare(b[0])).forEach(([ing,w]) => {
@@ -441,7 +871,90 @@
             tr.innerHTML = `<td>${ing}</td><td>${w.toFixed(2)}</td>`;
             tbody.appendChild(tr);
         });
+        // Show per-recipe recap
+        showRecipeRecap(selectedQuantities);
     });
+
+    /* Recipes tab logic */
+    function populateRecipeSelect() {
+        const select = document.getElementById('recipeSelect');
+        if (!select) return;
+        select.innerHTML = '';
+        // Option for all
+        const optAll = document.createElement('option');
+        optAll.value = '';
+        optAll.textContent = 'Toutes les recettes';
+        select.appendChild(optAll);
+        Object.keys(recipesData).forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            select.appendChild(opt);
+        });
+        select.addEventListener('change', showRecipeTables);
+        // Show all by default
+        showRecipeTables();
+    }
+    function showRecipeTables() {
+        const container = document.getElementById('recipesContainer');
+        container.innerHTML = '';
+        const selected = document.getElementById('recipeSelect').value;
+        const names = selected ? [selected] : Object.keys(recipesData);
+        const multiples = [1,2,3,4,5,6,7,8,9,10,11,12];
+        names.forEach(name => {
+            const items = recipesData[name];
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            const header = document.createElement('h3');
+            header.textContent = name;
+            header.style.marginBottom = '0.5rem';
+            card.appendChild(header);
+            const wrapper = document.createElement('div');
+            wrapper.style.overflowX = 'auto';
+            const table = document.createElement('table');
+            table.className = 'result-table';
+            // Build header row
+            const thead = document.createElement('thead');
+            const headRow = document.createElement('tr');
+            const thIng = document.createElement('th');
+            thIng.textContent = 'Ingrédient';
+            headRow.appendChild(thIng);
+            multiples.forEach(m => {
+                const th = document.createElement('th');
+                th.textContent = m + 'KG';
+                // Highlight even multiples (2KG,4KG,...) to improve readability
+                if (m % 2 === 0) {
+                    th.style.backgroundColor = '#f8f0da';
+                }
+                headRow.appendChild(th);
+            });
+            thead.appendChild(headRow);
+            table.appendChild(thead);
+            // Body
+            const tbody = document.createElement('tbody');
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                const tdName = document.createElement('td');
+                tdName.textContent = item.ingredient;
+                row.appendChild(tdName);
+                multiples.forEach(m => {
+                    const td = document.createElement('td');
+                    const value = item.baseWeight * m;
+                    td.textContent = value.toFixed(0);
+                    // Apply beige background to even multiple columns
+                    if (m % 2 === 0) {
+                        td.style.backgroundColor = '#f8f0da';
+                    }
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+            wrapper.appendChild(table);
+            card.appendChild(wrapper);
+            container.appendChild(card);
+        });
+    }
     // Timers logic
     document.getElementById('addTimerBtn').addEventListener('click', () => addTimer());
     function addTimer() {
@@ -449,6 +962,8 @@
         const card = document.createElement('div');
         card.className = 'timer-card';
         card.innerHTML = `
+            <div class="card-accent"></div>
+            <div class="card-header"><i class="fa-solid fa-stopwatch"></i><span>Minuteur</span></div>
             <input type="text" class="timer-label" placeholder="Nom du minuteur" style="margin-bottom:0.5rem; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px;">
             <div class="inputs">
                 <input type="number" class="timer-minute" placeholder="Min" min="0" value="0">
@@ -470,6 +985,29 @@
         const display = card.querySelector('.timer-display');
         let remaining = 0;
         let interval = null;
+        // Intervals to handle continuous alarm and flashing when timer completes
+        let alarmInterval = null;
+        let flashInterval = null;
+
+        function startAlarm() {
+            // play an initial beep
+            playBeep();
+            // beep every second for a more urgent alarm
+            alarmInterval = setInterval(playBeep, 1000);
+            // toggle flash class every 500ms
+            flashInterval = setInterval(() => {
+                card.classList.toggle('flash');
+            }, 500);
+            card.classList.add('completed');
+        }
+        function stopAlarm() {
+            if (alarmInterval) clearInterval(alarmInterval);
+            if (flashInterval) clearInterval(flashInterval);
+            alarmInterval = null;
+            flashInterval = null;
+            card.classList.remove('completed');
+            card.classList.remove('flash');
+        }
         function updateDisplay() {
             const m = Math.floor(remaining / 60);
             const s = remaining % 60;
@@ -481,11 +1019,15 @@
             remaining = m * 60 + s;
             if (remaining <= 0) return;
             clearInterval(interval);
+            card.classList.remove('completed');
             updateDisplay();
             interval = setInterval(() => {
                 remaining--;
                 updateDisplay();
-                if (remaining <= 0) { clearInterval(interval); }
+                if (remaining <= 0) {
+                    clearInterval(interval);
+                    startAlarm();
+                }
             }, 1000);
         });
         card.querySelector('.pause-btn').addEventListener('click', () => {
@@ -494,6 +1036,7 @@
         card.querySelector('.reset-btn').addEventListener('click', () => {
             clearInterval(interval);
             remaining = 0;
+            stopAlarm();
             updateDisplay();
         });
     }
@@ -520,6 +1063,490 @@
         localStorage.setItem('chatMessages', JSON.stringify(msgs));
         input.value = '';
         loadMessages();
+    });
+
+    /* ===== Accueil / News tab functions ===== */
+    let newsPosts = [];
+    function loadNews() {
+        const stored = localStorage.getItem('newsPosts');
+        if (stored) {
+            try { newsPosts = JSON.parse(stored); } catch (e) { newsPosts = []; }
+        } else newsPosts = [];
+    }
+    function saveNews() {
+        localStorage.setItem('newsPosts', JSON.stringify(newsPosts));
+    }
+    function renderNews() {
+        const container = document.getElementById('newsContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        if (newsPosts.length === 0) {
+            container.innerHTML = '<p>Aucune actualité pour le moment.</p>';
+            return;
+        }
+        // Show the most recent posts first
+        newsPosts.slice().reverse().forEach(post => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            const title = document.createElement('h3');
+            title.textContent = post.title;
+            title.style.marginBottom = '0.25rem';
+            const meta = document.createElement('small');
+            meta.textContent = new Date(post.date).toLocaleString();
+            meta.style.display = 'block';
+            meta.style.color = '#666';
+            const content = document.createElement('p');
+            content.textContent = post.content;
+            card.appendChild(title);
+            card.appendChild(meta);
+            card.appendChild(content);
+            container.appendChild(card);
+        });
+    }
+    function addNewsItem() {
+        const titleEl = document.getElementById('newsTitle');
+        const contentEl = document.getElementById('newsContent');
+        const title = titleEl ? titleEl.value.trim() : '';
+        const content = contentEl ? contentEl.value.trim() : '';
+        if (!title || !content) return;
+        newsPosts.push({ title, content, date: Date.now() });
+        saveNews();
+        renderNews();
+        // Clear the form
+        if (titleEl) titleEl.value = '';
+        if (contentEl) contentEl.value = '';
+    }
+    // Attach news button listener when element exists
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('addNewsBtn');
+        if (btn) btn.addEventListener('click', addNewsItem);
+        loadNews();
+        renderNews();
+    });
+
+    // Planning tab event
+    const addPlanningBtn = document.getElementById('addPlanningBtn');
+    if (addPlanningBtn) {
+        addPlanningBtn.addEventListener('click', addPlanningTask);
+    }
+
+    // Play a short beep when a timer finishes
+    // Play an alarm-style sound made of multiple tones. This function
+    // creates a short sequence of two frequencies to mimic a small alarm.
+    function playBeep() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const scheduleTone = (freq, start, duration) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.frequency.value = freq;
+                // Use a square wave for a clear beep
+                osc.type = 'square';
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                // Moderate volume so the tone is noticeable but not too aggressive
+                gain.gain.setValueAtTime(0.4, ctx.currentTime + start);
+                osc.start(ctx.currentTime + start);
+                osc.stop(ctx.currentTime + start + duration);
+            };
+            // Gentle repeating pattern: two short beeps separated by a brief pause.
+            // Use a consistent frequency for a regular beep‑beep alarm.
+            scheduleTone(1000, 0, 0.1);
+            scheduleTone(1000, 0.3, 0.1);
+            // Close the audio context after the beeps finish.
+            setTimeout(() => { ctx.close(); }, 700);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    /*
+     * Display a detailed recap of the requested recipes in the production
+     * tab.  For each recipe selected with a quantity greater than zero,
+     * this function creates a card showing the recipe name, the number
+     * of units (interpreted as kilograms) and a table of ingredients
+     * with the total weight required.  The recap is cleared when no
+     * quantities are provided.
+     */
+    function showRecipeRecap(qtys) {
+        const container = document.getElementById('recipeRecap');
+        if (!container) return;
+        container.innerHTML = '';
+        if (!qtys || Object.keys(qtys).length === 0) {
+            return;
+        }
+        Object.entries(qtys).forEach(([name, qty]) => {
+            const items = recipesData[name];
+            if (!items) return;
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            const header = document.createElement('h3');
+            header.textContent = `${name} \u00D7 ${qty}`;
+            header.style.marginBottom = '0.5rem';
+            card.appendChild(header);
+            const table = document.createElement('table');
+            table.className = 'result-table';
+            const thead = document.createElement('thead');
+            const headRow = document.createElement('tr');
+            headRow.innerHTML = '<th>Ingrédient</th><th>Poids total (g)</th>';
+            thead.appendChild(headRow);
+            table.appendChild(thead);
+            const tbody = document.createElement('tbody');
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                const tdName = document.createElement('td');
+                tdName.textContent = item.ingredient;
+                const tdWeight = document.createElement('td');
+                tdWeight.textContent = (item.baseWeight * qty).toFixed(0);
+                row.appendChild(tdName);
+                row.appendChild(tdWeight);
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+            card.appendChild(table);
+            container.appendChild(card);
+        });
+    }
+
+    /* ===== Cost tab functions ===== */
+    let ingredientPrices = {};
+    // Average packaging and labour costs per kilogram of product (approximate values
+    // based on typical bakery data in France).  Packaging costs include bags,
+    // paper and other consumables, while labour covers the direct time spent
+    // producing one kilogram of product.  These constants are used to
+    // estimate overheads in the cost of goods table.
+    const packagingCostPerKg = 0.15;
+    const labourCostPerKg = 2.0;
+    function loadIngredientPrices() {
+        const stored = localStorage.getItem('ingredientPrices');
+        if (stored) {
+            try { ingredientPrices = JSON.parse(stored); } catch (e) { ingredientPrices = {}; }
+        }
+    }
+    function saveIngredientPrices() {
+        localStorage.setItem('ingredientPrices', JSON.stringify(ingredientPrices));
+    }
+    function populateCostRecipeSelect() {
+        const select = document.getElementById('costRecipeSelect');
+        if (!select) return;
+        select.innerHTML = '';
+        Object.keys(recipesData).forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            select.appendChild(opt);
+        });
+        select.addEventListener('change', showCostTable);
+        loadIngredientPrices();
+        showCostTable();
+    }
+    function showCostTable() {
+        const container = document.getElementById('costTableContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        const recipe = document.getElementById('costRecipeSelect') ? document.getElementById('costRecipeSelect').value : '';
+        if (!recipe || !recipesData[recipe]) return;
+        const items = recipesData[recipe];
+        // Create card wrapper
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        const header = document.createElement('h3');
+        header.textContent = 'Coûts pour ' + recipe;
+        header.style.marginBottom = '0.5rem';
+        card.appendChild(header);
+        const table = document.createElement('table');
+        table.className = 'result-table';
+        const thead = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        headRow.innerHTML = '<th>Ingrédient</th><th>Poids (g)</th><th>Prix/kg (€)</th><th>Coût (€)</th>';
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+        const tbody = document.createElement('tbody');
+        let totalCost = 0;
+        items.forEach(item => {
+            const tr = document.createElement('tr');
+            // ingredient name
+            const tdName = document.createElement('td');
+            tdName.textContent = item.ingredient;
+            tr.appendChild(tdName);
+            // base weight
+            const tdWeight = document.createElement('td');
+            tdWeight.textContent = item.baseWeight.toFixed(0);
+            tr.appendChild(tdWeight);
+            // price input
+            const tdPrice = document.createElement('td');
+            const priceInput = document.createElement('input');
+            priceInput.type = 'number';
+            priceInput.min = '0';
+            priceInput.step = '0.01';
+            priceInput.style.width = '80px';
+            priceInput.value = ingredientPrices[item.ingredient] != null ? ingredientPrices[item.ingredient] : '';
+            priceInput.addEventListener('input', () => {
+                const val = parseFloat(priceInput.value);
+                if (!isNaN(val)) {
+                    ingredientPrices[item.ingredient] = val;
+                } else {
+                    delete ingredientPrices[item.ingredient];
+                }
+                saveIngredientPrices();
+                showCostTable();
+            });
+            tdPrice.appendChild(priceInput);
+            tr.appendChild(tdPrice);
+            // cost cell
+            const tdCost = document.createElement('td');
+            const pricePerKg = ingredientPrices[item.ingredient] || 0;
+            const cost = (item.baseWeight / 1000) * pricePerKg;
+            tdCost.textContent = cost.toFixed(2);
+            totalCost += cost;
+            tr.appendChild(tdCost);
+            tbody.appendChild(tr);
+        });
+
+        // After listing the ingredients, compute packaging and labour costs based on the total base weight.
+        const totalBaseWeightKg = items.reduce((sum, it) => sum + it.baseWeight, 0) / 1000;
+        const packagingCost = totalBaseWeightKg * packagingCostPerKg;
+        const labourCost = totalBaseWeightKg * labourCostPerKg;
+        const combinedCost = packagingCost + labourCost;
+        // Row showing combined packaging + personnel cost
+        const overheadRow = document.createElement('tr');
+        overheadRow.innerHTML = `<td>Packaging + Personnel</td><td>${(totalBaseWeightKg * 1000).toFixed(0)}</td><td>${(packagingCostPerKg + labourCostPerKg).toFixed(2)}</td><td>${combinedCost.toFixed(2)}</td>`;
+        tbody.appendChild(overheadRow);
+        // Add overheads to the total cost
+        totalCost += combinedCost;
+        table.appendChild(tbody);
+        card.appendChild(table);
+        // Total and margin section
+        const totalDiv = document.createElement('div');
+        totalDiv.style.marginTop = '1rem';
+        totalDiv.style.display = 'flex';
+        totalDiv.style.gap = '1rem';
+        totalDiv.style.alignItems = 'center';
+        // Sale price input
+        const saleLabel = document.createElement('label');
+        saleLabel.textContent = 'Prix de vente (€)';
+        const saleInput = document.createElement('input');
+        saleInput.type = 'number';
+        saleInput.min = '0';
+        saleInput.step = '0.01';
+        saleInput.style.width = '100px';
+        // Load last sale price from storage per recipe
+        const storedPrices = JSON.parse(localStorage.getItem('salePrices') || '{}');
+        if (storedPrices[recipe] != null) saleInput.value = storedPrices[recipe];
+        saleInput.addEventListener('input', () => {
+            const val = parseFloat(saleInput.value);
+            const prices = JSON.parse(localStorage.getItem('salePrices') || '{}');
+            if (!isNaN(val)) {
+                prices[recipe] = val;
+            } else {
+                delete prices[recipe];
+            }
+            localStorage.setItem('salePrices', JSON.stringify(prices));
+            updateMargin();
+        });
+        saleLabel.style.fontWeight = '600';
+        totalDiv.appendChild(saleLabel);
+        totalDiv.appendChild(saleInput);
+        // Total cost display
+        const costSpan = document.createElement('span');
+        costSpan.textContent = 'Coût total (€/kg) : ' + totalCost.toFixed(2);
+        costSpan.style.fontWeight = '600';
+        totalDiv.appendChild(costSpan);
+        // Margin display
+        const marginSpan = document.createElement('span');
+        marginSpan.style.fontWeight = '600';
+        totalDiv.appendChild(marginSpan);
+        function updateMargin() {
+            const sale = parseFloat(saleInput.value);
+            if (isNaN(sale) || sale <= 0) {
+                marginSpan.textContent = '';
+                return;
+            }
+            const margin = ((sale - totalCost) / sale) * 100;
+            marginSpan.textContent = 'Marge : ' + margin.toFixed(1) + '%';
+        }
+        updateMargin();
+        card.appendChild(totalDiv);
+        container.appendChild(card);
+    }
+
+    /* ===== Planning tab functions ===== */
+    let planningTasks = [];
+    function loadPlanningTasks() {
+        const stored = localStorage.getItem('planningTasks');
+        if (stored) {
+            try { planningTasks = JSON.parse(stored); } catch (e) { planningTasks = []; }
+        } else planningTasks = [];
+    }
+    function savePlanningTasks() {
+        localStorage.setItem('planningTasks', JSON.stringify(planningTasks));
+    }
+    function populatePlanningSelect() {
+        const select = document.getElementById('planningRecipe');
+        if (!select) return;
+        select.innerHTML = '';
+        Object.keys(recipesData).forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            select.appendChild(opt);
+        });
+        // Load existing tasks and render
+        loadPlanningTasks();
+        renderPlanningTasks();
+    }
+    function addPlanningTask() {
+        const date = document.getElementById('planningDate').value;
+        const time = document.getElementById('planningTime').value;
+        const recipe = document.getElementById('planningRecipe').value;
+        const qty = parseInt(document.getElementById('planningQuantity').value) || 0;
+        if (!date || !time || !recipe || qty <= 0) return;
+        const id = Date.now();
+        planningTasks.push({ id, date, time, recipe, qty });
+        savePlanningTasks();
+        renderPlanningTasks();
+        // reset inputs
+        document.getElementById('planningQuantity').value = 1;
+    }
+    function deletePlanningTask(id) {
+        planningTasks = planningTasks.filter(t => t.id !== id);
+        savePlanningTasks();
+        renderPlanningTasks();
+    }
+    function renderPlanningTasks() {
+        const container = document.getElementById('planningTasksContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        if (planningTasks.length === 0) {
+            container.textContent = 'Aucune tâche de production planifiée.';
+            return;
+        }
+        // sort by date/time
+        const sorted = planningTasks.slice().sort((a,b) => {
+            const ad = new Date(a.date + 'T' + a.time);
+            const bd = new Date(b.date + 'T' + b.time);
+            return ad - bd;
+        });
+        const table = document.createElement('table');
+        table.className = 'result-table';
+        const thead = document.createElement('thead');
+        const hr = document.createElement('tr');
+        hr.innerHTML = '<th>Date</th><th>Heure</th><th>Recette</th><th>Quantité</th><th>Action</th>';
+        thead.appendChild(hr);
+        table.appendChild(thead);
+        const tbody = document.createElement('tbody');
+        sorted.forEach(task => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${task.date}</td><td>${task.time}</td><td>${task.recipe}</td><td>${task.qty}</td>`;
+            const tdAction = document.createElement('td');
+            const delBtn = document.createElement('button');
+            delBtn.textContent = 'Supprimer';
+            delBtn.style.background = '#e53e3e';
+            delBtn.style.color = '#fff';
+            delBtn.style.border = 'none';
+            delBtn.style.borderRadius = '4px';
+            delBtn.style.padding = '0.25rem 0.5rem';
+            delBtn.style.cursor = 'pointer';
+            delBtn.addEventListener('click', () => deletePlanningTask(task.id));
+            tdAction.appendChild(delBtn);
+            tr.appendChild(tdAction);
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        container.appendChild(table);
+    }
+
+    /* ===== Recipe management functions ===== */
+    // Load custom recipes from localStorage and merge with base recipes
+    function loadCustomRecipes() {
+        const stored = localStorage.getItem('customRecipes');
+        if (stored) {
+            try {
+                customRecipes = JSON.parse(stored);
+                Object.keys(customRecipes).forEach(name => {
+                    recipesData[name] = customRecipes[name];
+                });
+            } catch (e) {
+                console.error('Erreur lors du chargement des recettes personnalisées', e);
+                customRecipes = {};
+            }
+        }
+    }
+    // Open the recipe modal. If a name is provided, populate with existing data, otherwise blank form
+    function openRecipeModal(name) {
+        const overlay = document.getElementById('recipeOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const nameInput = document.getElementById('recipeNameInput');
+        const tbody = document.getElementById('ingredientTableBody');
+        tbody.innerHTML = '';
+        if (name && recipesData[name]) {
+            modalTitle.textContent = 'Modifier la recette';
+            nameInput.value = name;
+            recipesData[name].forEach(item => {
+                addIngredientRow(item.ingredient, item.baseWeight);
+            });
+        } else {
+            modalTitle.textContent = 'Nouvelle recette';
+            nameInput.value = '';
+            addIngredientRow('', '');
+        }
+        overlay.style.display = 'flex';
+    }
+    // Close the recipe modal
+    function closeRecipeModal() {
+        document.getElementById('recipeOverlay').style.display = 'none';
+    }
+    // Create and append a row to the ingredient table
+    function addIngredientRow(name = '', weight = '') {
+        const tbody = document.getElementById('ingredientTableBody');
+        const tr = document.createElement('tr');
+        tr.className = 'ingredient-row';
+        tr.innerHTML = `
+            <td><input type="text" class="ing-name" value="${name}" placeholder="Ingrédient"></td>
+            <td><input type="number" class="ing-weight" value="${weight}" placeholder="Poids en g" min="0"></td>
+            <td style="text-align:center;"><button type="button" class="remove-ing"><i class="fa-solid fa-trash"></i></button></td>
+        `;
+        tr.querySelector('.remove-ing').addEventListener('click', () => {
+            tr.remove();
+        });
+        tbody.appendChild(tr);
+    }
+    // Build event listeners for recipe management
+    document.getElementById('manageRecipesBtn').addEventListener('click', () => {
+        const select = document.getElementById('recipeSelect');
+        const selected = select ? select.value : '';
+        openRecipeModal(selected);
+    });
+    document.getElementById('addIngredientBtn').addEventListener('click', () => addIngredientRow('', ''));
+    document.getElementById('cancelRecipeBtn').addEventListener('click', () => closeRecipeModal());
+    document.getElementById('saveRecipeBtn').addEventListener('click', () => {
+        const name = document.getElementById('recipeNameInput').value.trim();
+        if (!name) {
+            alert('Veuillez entrer un nom de recette');
+            return;
+        }
+        const rows = Array.from(document.querySelectorAll('#ingredientTableBody tr'));
+        const items = [];
+        for (const row of rows) {
+            const ing = row.querySelector('.ing-name').value.trim();
+            const wtStr = row.querySelector('.ing-weight').value;
+            const wt = parseFloat(wtStr);
+            if (!ing || isNaN(wt) || wt <= 0) continue;
+            items.push({ ingredient: ing, baseWeight: wt });
+        }
+        if (items.length === 0) {
+            alert('Veuillez ajouter au moins un ingrédient avec un poids valide');
+            return;
+        }
+        // Update local data and persist to localStorage
+        recipesData[name] = items;
+        customRecipes[name] = items;
+        localStorage.setItem('customRecipes', JSON.stringify(customRecipes));
+        // Refresh UI
+        generateProductCards();
+        populateRecipeSelect();
+        showRecipeTables();
+        closeRecipeModal();
     });
     </script>
 </body>
