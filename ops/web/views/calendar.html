@@ -1,0 +1,136 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Calendrier — Elio & Franck</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .topbar { display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
+  .pill { padding:6px 10px; border:1px solid #ddd; border-radius:999px; background:#fff; }
+  #calendar { max-width: 1100px; margin: 0 auto; }
+  .fc .fc-toolbar-title { font-size: 20px; }
+  .modal { position: fixed; inset:0; background: rgba(0,0,0,0.35); display:none; align-items:center; justify-content:center; }
+  .modal .card { width: 520px; max-width: 92vw; background: #fff; }
+</style>
+</head>
+<body>
+  <h1>Calendrier Événements — Elio & Franck</h1>
+  <div class="topbar">
+    <button class="pill" onclick="seed()">+ Préremplir (Jours fériés & Thématiques)</button>
+    <input id="year" class="pill" type="number" min="2025" max="2035" value="2025" />
+    <button class="pill" onclick="openNew()">+ Nouvel événement</button>
+  </div>
+  <div id="calendar"></div>
+
+  <div id="modal" class="modal"><div class="card" style="padding:16px">
+    <h3 id="m_title">Nouvel événement</h3>
+    <div class="row">
+      <input id="e_title" placeholder="Titre (ex: OCTOBRE ROSE)" style="flex:1">
+    </div>
+    <div class="row">
+      <label>Début <input id="e_start" type="date"></label>
+      <label>Fin <input id="e_end" type="date"></label>
+      <select id="e_cat">
+        <option value="thematique">Thématique</option>
+        <option value="ferie">Jour férié</option>
+        <option value="marketing">Marketing</option>
+        <option value="production">Production</option>
+      </select>
+    </div>
+    <div class="row">
+      <button onclick="saveEvent()">Enregistrer</button>
+      <button onclick="closeModal()">Fermer</button>
+    </div>
+    <hr/>
+    <div class="row">
+      <button id="btnChecklist" style="display:none" onclick="genChecklist()">Générer checklist automatique</button>
+    </div>
+    <div id="tasks"></div>
+  </div></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <script src="/js/common.js"></script>
+  <script>
+    let currentEventId = null;
+    function openNew(){
+      currentEventId = null;
+      m_title.textContent = "Nouvel événement";
+      e_title.value = "";
+      e_start.value = ""; e_end.value="";
+      e_cat.value = "thematique";
+      btnChecklist.style.display = "none";
+      tasks.innerHTML = "";
+      modal.style.display = "flex";
+    }
+    function closeModal(){ modal.style.display = "none"; }
+
+    async function saveEvent(){
+      const body = {
+        title: e_title.value,
+        start_date: e_start.value,
+        end_date: e_end.value || null,
+        category_code: e_cat.value,
+        all_day: 1,
+        meta: { source: 'eliofranck' }
+      };
+      const r = await jpost('/api/calendar/events', body);
+      currentEventId = r.id;
+      btnChecklist.style.display = "inline-block";
+      await refresh();
+      alert("Événement créé");
+    }
+
+    async function genChecklist(){
+      if (!currentEventId) return;
+      await jpost(`/api/calendar/events/${currentEventId}/auto-checklist`, {});
+      const list = await jget(`/api/calendar/events/${currentEventId}/tasks`);
+      tasks.innerHTML = "<h4>Checklist</h4>" + list.map(t => (
+        `<div class='row'><span>${t.due_date}</span> — <strong>${t.title}</strong> — <em>${t.status}</em></div>`
+      )).join("");
+    }
+
+    async function seed(){
+      const y = Number(year.value) || new Date().getFullYear();
+      await jpost('/api/calendar/seed', { year: y });
+      await refresh();
+      alert('Calendrier prérempli pour ' + y);
+    }
+
+    async function refresh(){
+      const now = new Date();
+      const start = new Date(now.getFullYear(), 0, 1).toISOString().slice(0,10);
+      const end = new Date(now.getFullYear(), 11, 31).toISOString().slice(0,10);
+      const events = await jget(`/api/calendar/events?start=${start}&end=${end}`);
+      calendar.removeAllEventSources();
+      calendar.addEventSource(events.map(e => ({
+        id: e.id, title: e.title,
+        start: e.start_date,
+        end: e.end_date || undefined,
+        allDay: e.all_day === 1,
+        color: e.category_color || undefined
+      })));
+    }
+
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
+      locale: 'fr',
+      height: 'auto',
+      eventClick: async (info) => {
+        currentEventId = info.event.id;
+        m_title.textContent = info.event.title;
+        e_title.value = info.event.title;
+        e_start.value = info.event.startStr.slice(0,10);
+        e_end.value = info.event.endStr ? info.event.endStr.slice(0,10) : "";
+        btnChecklist.style.display = "inline-block";
+        const list = await jget(`/api/calendar/events/${currentEventId}/tasks`);
+        tasks.innerHTML = list.length ? ("<h4>Checklist</h4>" + list.map(t => (
+          `<div class='row'><span>${t.due_date}</span> — <strong>${t.title}</strong> — <em>${t.status}</em></div>`
+        )).join("")) : "";
+        modal.style.display = "flex";
+      }
+    });
+    calendar.render();
+    refresh();
+  </script>
+</body></html>

@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><title>EF Ops - Production</title>
+<link rel="stylesheet" href="/css/style.css"></head><body>
+<h1>Planification de production</h1>
+<div class="row">
+  <label>Date <input id="date" type="date"></label>
+  <input id="shop_id" type="number" placeholder="ID boutique (optionnel)">
+  <button onclick="load()">Charger</button>
+</div>
+<div class="card">
+  <table><thead><tr><th>Produit</th><th>Qté</th></tr></thead><tbody id="tb"></tbody></table>
+</div>
+<script src="/js/common.js"></script>
+<script>
+  function fmt(d){ return d.toISOString().slice(0,10); }
+  async function load(){
+    const d = await jget(`/api/production/aggregate?date=${date.value}&shop_id=${shop_id.value || ''}`);
+    tb.innerHTML = d.map(x=>`<tr><td>${x.name}</td><td>${x.qty}</td></tr>`).join('');
+  }
+  date.value = fmt(new Date());
+  load();
+</script>
+</body></html>

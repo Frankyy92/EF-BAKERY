@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"><title>EF Ops - Dashboard</title>
+<link rel="stylesheet" href="/css/style.css"></head><body>
+<h1>Tableau de bord</h1>
+<div class="row">
+  <label>Du <input id="start" type="date"></label>
+  <label>Au <input id="end" type="date"></label>
+  <button onclick="load()">Actualiser</button>
+</div>
+<div class="grid">
+  <div class="card"><div>Quantités produites</div><div id="k1" class="kpi">—</div></div>
+  <div class="card"><div>Pertes</div><div id="k2" class="kpi">—</div></div>
+  <div class="card"><div>Taux de perte</div><div id="k3" class="kpi">—</div></div>
+</div>
+<script src="/js/common.js"></script>
+<script>
+  function fmt(d){ return d.toISOString().slice(0,10); }
+  async function load(){
+    const s = document.getElementById('start').value;
+    const e = document.getElementById('end').value;
+    const d = await jget(`/api/metrics?start=${s}&end=${e}`);
+    document.getElementById('k1').textContent = d.produced_qty;
+    document.getElementById('k2').textContent = d.loss_qty;
+    document.getElementById('k3').textContent = d.loss_rate + '%';
+  }
+  const today = new Date(); const y = new Date(Date.now()-6*24*3600*1000);
+  document.getElementById('start').value = fmt(y);
+  document.getElementById('end').value = fmt(today);
+  load();
+</script>
+</body></html>

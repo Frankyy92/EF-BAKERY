@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><title>EF Ops - Pertes</title>
+<link rel="stylesheet" href="/css/style.css"></head><body>
+<h1>Déclarer une perte / un retour</h1>
+<div class="card">
+  <h3>Perte</h3>
+  <div class="row">
+    <input id="l_shop" type="number" placeholder="ID boutique">
+    <input id="l_prod" type="number" placeholder="ID produit">
+    <input id="l_qty" type="number" step="0.01" placeholder="Qté">
+    <input id="l_reason" placeholder="Motif (casse, invendu...)">
+    <input id="l_date" type="date">
+    <button onclick="loss()">Valider</button>
+  </div>
+</div>
+<div class="card">
+  <h3>Retour</h3>
+  <div class="row">
+    <input id="r_shop" type="number" placeholder="ID boutique">
+    <input id="r_prod" type="number" placeholder="ID produit">
+    <input id="r_qty" type="number" step="0.01" placeholder="Qté">
+    <input id="r_date" type="date">
+    <button onclick="retour()">Valider</button>
+  </div>
+</div>
+<script src="/js/common.js"></script>
+<script>
+  async function loss(){
+    const body = { shop_id:+l_shop.value, product_id:+l_prod.value, qty:+l_qty.value, reason:l_reason.value, loss_date:l_date.value };
+    const r = await jpost('/api/losses', body);
+    alert('Perte OK #' + r.id);
+  }
+  async function retour(){
+    const body = { shop_id:+r_shop.value, product_id:+r_prod.value, qty:+r_qty.value, return_date:r_date.value };
+    const r = await jpost('/api/returns', body);
+    alert('Retour OK #' + r.id);
+  }
+</script>
+</body></html>

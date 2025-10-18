@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8"><title>EF Ops - Stocks</title>
+<link rel="stylesheet" href="/css/style.css"></head><body>
+<h1>Mouvements de stock</h1>
+<div class="card">
+  <div class="row">
+    <select id="scope"><option value="finished">Produits finis</option><option value="raw">Matières premières</option></select>
+    <input id="item_id" type="number" placeholder="ID produit/matière">
+    <select id="kind"><option value="in">Entrée</option><option value="out">Sortie</option></select>
+    <input id="qty" type="number" step="0.01" placeholder="Qté">
+    <input id="reason" placeholder="Motif (achat, perte, retour...)">
+    <input id="ref_date" type="date">
+    <button onclick="move()">Valider</button>
+  </div>
+  <div class="row">
+    <input id="level_item" type="number" placeholder="ID pour niveau"><button onclick="level()">Voir niveau</button>
+    <span id="level_res"></span>
+  </div>
+</div>
+<script src="/js/common.js"></script>
+<script>
+  async function move(){
+    const body = {
+      scope: scope.value, item_id: +item_id.value, kind: kind.value,
+      qty: +qty.value, reason: reason.value, ref_date: ref_date.value || undefined
+    };
+    const r = await jpost('/api/stocks/move', body);
+    alert('OK mouvement #' + r.id);
+  }
+  async function level(){
+    const r = await jget(`/api/stocks/level?scope=${scope.value}&item_id=${+level_item.value}`);
+    level_res.textContent = 'Niveau: ' + r.level;
+  }
+</script>
+</body></html>

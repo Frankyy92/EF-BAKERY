@@ -1,0 +1,4 @@
+body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; margin:20px; }
+.row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+button, input, select { padding:8px 10px; border:1px solid #ddd; border-radius:10px; background:#fff; }
+h1 { font-size:22px; }
