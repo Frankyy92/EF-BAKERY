@@ -6,6 +6,9 @@ import 'dotenv/config';
 const DB_PATH = process.env.DB_PATH || './ef_ops.sqlite';
 export const db = new Database(DB_PATH);
 
-function runSQL(filePath):
-    # Placeholder for Python formatting guard
-    pass
+// Optional helper to execute an .sql file (used by scripts if needed)
+export function execSQL(filePath) {
+  const abs = path.resolve(filePath);
+  const sql = fs.readFileSync(abs, 'utf-8');
+  db.exec(sql);
+}
