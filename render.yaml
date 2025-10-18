@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: ef-bakery-ops
+    env: node
+    plan: starter  # ou free si tu veux tester, mais starter est recommandé
+    rootDir: ops/api
+    buildCommand: |
+      cd ops/api && npm install
+    startCommand: |
+      cd ops/api \
+      && mkdir -p ../web/public \
+      && cp -r ../web/views/* ../web/public/ \
+      && node db.cli.js migrate \
+      && node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: DB_PATH
+        value: /var/data/ef_ops.sqlite
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
